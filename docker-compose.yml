@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  player:
+    build: ./player
+    volumes:
+     - /home/pi/services/logs:/logs
+     - /home/pi/services/audio:/audio
+    devices:
+     - /dev/snd
+    environment:
+     - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
+    restart: always
+  telegram-db-bot:
+    image: mitto98/telegram-downloader-bot:latest
+    environment:
+      TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN}"
+      TELEGRAM_CHAT_ID: "${TELEGRAM_CHAT_ID}"
+    volumes:
+       - /home/pi/services/audio:/downloads
+    restart: unless-stopped
